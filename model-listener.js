@@ -90,26 +90,26 @@ ModelListener.prototype.entityAdded = function(snapshot) {
 		});
 	}
 	if (!entity[model.fbId]) {
-	return setEntityRelations(snapshot.ref().root(), model.relations, entity)
-	.then((entity) => {
-		return lrService.add(entity).then((body) => {
-			var newEntity = JSON.parse(body).result;
-			//console.log(JSON.parse(body));
-			console.log("%s added - id: %d", model.name,
-				newEntity[model.lrId]);
-			if (newEntity[model.lrId]) {
-				ignoreList[newEntity[model.lrId]] = true;
-				var updatedEntity = {};
-				updatedEntity[model.fbId] = Number(newEntity[model.lrId]);
-				updatedEntity["modifiedDate"] = newEntity.modifiedDate ? Number(newEntity.modifiedDate) : null
-				snapshot.ref().update(updatedEntity);
-			}
-		this.ref.root().child('_TIMESTAMP').set(Firebase.ServerValue.TIMESTAMP);
+		return setEntityRelations(snapshot.ref().root(), model.relations, entity)
+		.then((entity) => {
+			return lrService.add(entity).then((body) => {
+				var newEntity = JSON.parse(body).result;
+				//console.log(JSON.parse(body));
+				console.log("%s added - id: %d", model.name,
+					newEntity[model.lrId]);
+				if (newEntity[model.lrId]) {
+					ignoreList[newEntity[model.lrId]] = true;
+					var updatedEntity = {};
+					updatedEntity[model.fbId] = Number(newEntity[model.lrId]);
+					updatedEntity["modifiedDate"] = newEntity.modifiedDate ? Number(newEntity.modifiedDate) : null
+					snapshot.ref().update(updatedEntity);
+				}
+			this.ref.root().child('_TIMESTAMP').set(Firebase.ServerValue.TIMESTAMP);
+			});
+		}).catch((error) => {
+			console.log(error);
+			console.error("Error adding %s: %s ", model.name, error);
 		});
-    }).catch((error) => {
-		console.log(error);
-		console.error("Error adding %s: %s ", model.name, error);
-	});
 	}
 };
 
@@ -180,6 +180,9 @@ ModelListener.prototype.start = function(TIMESTAMP) {
 			console.log("---EndSync %s", model.name);
 			this._listen();
 		});
+	}).catch((error) => {
+		console.log("---Error syncing %s listener", model.name);
+		this._listen();
 	});
 };
 

@@ -29,10 +29,9 @@ exports.post = function(message, payload, devices) {
 			"send_to_all": true,
 			"profile": ionic.profile,
 			"notification": {
-				"message": message
-			},
-			"payload": payload 
-				
+				"message": message,
+				"payload": payload 
+			}
 		};
 		req.write(JSON.stringify(body));
 		req.end();
