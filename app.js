@@ -81,3 +81,5 @@ ref.child('_RESTART').on('value', (snapshot) => {
     }
 });
 
+require('./push-sender.js');
+
